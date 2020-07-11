@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Club Deportivo</title>
+<script>
+var Alumnos = new Array();
+var i=0;
+var cantGrupo=0;
+var tipoPago=1;
+function fecha(){
+	var fecha=new Date();
+	var dia= fecha.getDate();
+	var mes= fecha.getMonth();
+	var anio= fecha.getFullYear();
+	var completa = dia+"/"+mes+"/"+anio;//¿Por que no me reconoce fec.value en la siguiente línea (la comentada)?
+	//fec.value=dia+"/"+mes+"/"+anio;
+	return completa;
+}
+function Alumno(){
+	this.nombre = "";
+	this.edad = 0;
+	this.direccion = "";
+	this.telefono = 0;
+	this.email = "";
+	this.grupo = agrupate;
+	this.ingresoMail = null ;
+}
+function Agregado(nombre, edad){
+	this.nombre=nombre;
+	this.edad=edad;
+}
+function agrupate(nom, cant){
+	if(cant>1 && cant<5 && nom!=""){
+		var G = new Array();
+		var j=0;
+		while (Alumnos[j].nombre!=nom && j<=Alumnos.length-1){
+			j++;
+		}
+		if (Alumnos[j].nombre==nom){
+			for (h=2;h<=cant;h++){
+				var persona=new Agregado;
+				do{
+					persona.nombre=prompt("ingrese nombre : ","");
+				}
+				while(validoNombre(persona.nombre)==false);
+				do{
+					persona.edad=prompt("ingrese edad : ","");
+				}
+				while(validoNumerico(persona.edad)==false);
+				G[h]=persona;
+			}
+			Alumnos[j].grupo=G;
+			cliente.txt_grupo.value=1;
+		}
+	}
+}
+
+function calculoAgregado(grupo){
+	var montopersona=740;
+	var montogrupo=0;
+	for (y in grupo){
+		if (grupo[y].edad<18) montopersona=montopersona*0.90;
+		else if (grupo[y].edad>60) montopersona=montopersona*0.80;
+		montogrupo=montogrupo + montopersona;
+		montopersona=740;
+		cantGrupo=parseInt(y);
+	}
+	return montogrupo;
+}
+function calculoMonto(){
+	var nomb=new String();
+	var montoAgregado=0;
+	var montoGral=740;
+	nomb=prompt("ingrese nombre : ","");
+	bandera=false;
+	var j=0;
+	if(Alumnos[j]==null) alert("No existe el cliente solicitado");
+	else{
+		do{
+			if (Alumnos[j].nombre.toLowerCase()!=nomb.toLowerCase()){ 
+				j++;
+			}else bandera=true;
+		}
+		while(j<=Alumnos.length-1 && bandera==false);
+		if(j>Alumnos.length-1) j--;
+		if (Alumnos[j].nombre.toLowerCase()==nomb.toLowerCase()){
+			if (Alumnos[j].grupo != null){
+				montoAgregado=calculoAgregado(Alumnos[j].grupo,cantGrupo);
+			}
+			if (Alumnos[j].edad<18 ) montoGral=montoGral*0.90;
+			if (Alumnos[j].edad>60 ) montoGral=montoGral*0.80;
+			//aca agregamos el monto agregado y hacemos el calculo general
+			if (cantGrupo==2) montoGral=(montoGral+montoAgregado)*0.95;
+			else if (cantGrupo==3) montoGral=(montoGral+montoAgregado)*0.90;
+			else if (cantGrupo==4) montoGral=(montoGral+montoAgregado)*0.85;
+			if (tipoPago==2) montoGral=montoGral*1.03;
+			if (tipoPago==3) montoGral=montoGral*1.07;
+			alert("El monto a pagar del cliente "+Alumnos[j].nombre+" es de $"+montoGral);
+			cantGrupo=0;
+			return montoGral;
+		}else{
+	 		alert("No existe el cliente solicitado");
+		}
+	}
+}
+function validoMail(ema){
+	var e = new String();
+	e = ema;
+	ret = true;
+	if (e.indexOf('@')==-1 || e.indexOf('.')==-1){
+		ret=false;
+		alert("No es una dirección de correo válida");
+	}
+	return ret;
+}
+function validoNombre(texto){
+	var ret = true;
+	if (texto=="" || texto==null){
+		alert("Debe completar los campos obligatorios");
+		ret = false;
+	}
+	return ret;
+}
+function validoNumerico(num){
+	var ret = true;
+	if (isNaN(num) || num=="" || num==null){
+		alert("Datos no válidos para campo numérico");
+		ret = false;
+	}
+	return ret;
+}
+function ingresoDatos(nom, eda, dir, tel, mail){
+	var a = new Alumno();
+	if (validoNombre(nom)==true && validoMail(mail)==true && validoNumerico(eda)==true && validoNumerico(tel)){
+		a.nombre=nom;
+		a.edad=eda;
+		a.direccion=dir;
+		a.telefono=tel;
+		a.email=mail;
+		Alumnos[i]=a;
+		i++;
+	}
+}
+function informa(){
+	var v1;
+	v1=window.open("dos.html","v","status=yes resizable=yes");
+	//esto no funciona
+	v1.document.bgColor="gray";
+	v1.document.write("<h1><center>Lista de Socios</center></h1>");
+	for(j in Alumnos){
+	//no funciona el writeln
+	for (y=2;y<=Alumnos[j].grupo.length-1;y++){
+		if (Alumnos[j].grupo[y].nombre!=null) v1.document.write("Nombre : "+Alumnos[j].grupo[y].nombre+"</br>");
+		if (Alumnos[j].grupo[y].edad!=null){
+			v1.document.write("Edad : "+Alumnos[j].grupo[y].edad+"</br>");
+			v1.document.write("_____________________________</br>");
+		}
+	}
+		v1.document.write("Nombre : "+Alumnos[j].nombre+"</br>");
+		v1.document.write("Edad : "+Alumnos[j].edad+"</br><hr>");
+	}
+}
+function radio(num){
+ tipoPago = parseInt(num);
+}
+function chequear(){
+	var elementos;
+	elementos = document.getElementsByName("rl");
+	elementos[0].checked="true";
+	cliente.btn_monto.disabled="disabled";
+}
+</script>
+</head>
+<body bgcolor="#B97B20" text="black" onload="fec.value=fecha();" >
+<h1><center>Club Social y Deportivo "El Quinoto Alegre"</center></h1>
+<hr />
+<br />
+<br />
+<table align="right">
+<tr>
+<td>Fecha Actual : </td>
+<td><input type="text" name="fec" id="fec" size="6" /></td>
+</tr>
+</table>
+<form name="cliente" id="cliente">
+<table align="left" width="35%" border="1">
+<tr>
+<th width="40%">Datos del Cliente</th>
+</tr>
+<tr>
+<td>Nombre *  </td><td><input type="text" name="txt_nom" id="txt_nom" size="15" /></td>
+</tr>
+<tr>
+<td>Edad *  </td><td><input type="text" name="txt_eda" id="eda" size="2" /></td>
+</tr>
+<tr>
+<td>Dirección   </td><td><input type="text" name="txt_dir" id="txt_dir" size="30" /></td>
+</tr>
+<tr>
+<td>Teléfono *  </td><td><input type="text" name="txt_tel" id="txt_tel" size="8" /></td>
+</tr>
+<tr>
+<td>Email *  </td><td><input type="text" name="txt_mail" id="txt_mail" size="25" onfocus="cliente.btn_ingresar.disabled=false" /></td>
+</tr>
+</table>
+<table align="left" width="30%">
+<tr>
+<th align="left">Cantidad de personas del grupo familiar : </th><td><input type="text" name="txt_grupo" id="txt_grupo" size="1" value="1" /></td>
+</tr>
+<tr>
+<h2><th align="left">El valor de la cuota normal es de $740</th></h2>
+</tr>
+<tr>
+<th align="left">Los campos marcados con (*) son obligatorios </th>
+</tr>
+</table>
+<table>
+<tr><td><input type="button" name="btn_ingresar" id="btn_ingresar" disabled="disabled" value="Ingresar" onclick="ingresoDatos(cliente.txt_nom.value, cliente.txt_eda.value, cliente.txt_dir.value, cliente.txt_tel.value, cliente.txt_mail.value);agrupate(cliente.txt_nom.value, cliente.txt_grupo.value);cliente.txt_nom.value='';cliente.txt_eda.value='';cliente.txt_dir.value='';cliente.txt_tel.value='';cliente.txt_mail.value='';cliente.btn_ingresar.disabled=true;" /></td>
+<tr>
+<td><input type="button" value="Listar" onclick="informa();" />
+</tr>
+</table>
+<table>
+<tr>
+<td>Contado</td><td><input type="radio" name="rl" id="rl" onclick="radio(1); cliente.btn_monto.disabled=false;" />
+<td>Tarjeta</td><td><input type="radio" name="rl" id="rl" onclick="radio(2);cliente.btn_monto.disabled=false;"/>
+<td>Cheque</td><td><input type="radio" name="rl" id="rl" onclick="radio(3);cliente.btn_monto.disabled=false;" />
+</tr>
+</table>
+<table>
+<tr>
+<td><input type="button" disabled="disabled" value="Monto" name="btn_monto" id="btn_monto" onclick="calculoMonto();chequear();" /></td>
+</tr>
+</table>
+</form>
+</body>
+</html>
